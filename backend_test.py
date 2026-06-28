@@ -10,14 +10,14 @@ from datetime import datetime, timedelta
 import sys
 
 # Backend URL from frontend/.env
-BASE_URL = "https://web-pull-staging.preview.emergentagent.com/api"
+BASE_URL = "https://change-ready-2.preview.emergentagent.com/api"
 
 def test_playbook_minimal_payload():
     """Test 1: POST with ONLY name+email => 200, company should be null"""
     print("\n[TEST 1] POST /api/playbook-requests with minimal payload (name+email only)")
     payload = {
         "name": "Jordan Lee",
-        "email": "jordan@example.com"
+        "email": "jordan@brightledger.co"
     }
     response = requests.post(f"{BASE_URL}/playbook-requests", json=payload)
     print(f"  Status: {response.status_code}")
@@ -28,7 +28,7 @@ def test_playbook_minimal_payload():
     assert "id" in data, "Response should contain 'id'"
     assert "created_at" in data, "Response should contain 'created_at'"
     assert data["name"] == "Jordan Lee", f"Expected name 'Jordan Lee', got {data.get('name')}"
-    assert data["email"] == "jordan@example.com", f"Expected email 'jordan@example.com', got {data.get('email')}"
+    assert data["email"] == "jordan@brightledger.co", f"Expected email 'jordan@brightledger.co', got {data.get('email')}"
     assert data.get("company") is None, f"Expected company to be null, got {data.get('company')}"
     print("  ✅ PASS: Minimal payload accepted, company is null")
     return data["id"]
@@ -39,7 +39,7 @@ def test_playbook_with_source_and_asset_title():
     print("\n[TEST 2] POST /api/playbook-requests with source and asset_title")
     payload = {
         "name": "Sam Patel",
-        "email": "sam@example.com",
+        "email": "sam@techcorp.io",
         "source": "resource:ebook:operating-system",
         "asset_title": "The Automation-First Operating System"
     }
@@ -108,7 +108,7 @@ def test_playbook_backwards_compatibility():
         "name": "Full Name",
         "company": "Acme Corp",
         "designation": "Operations Manager",
-        "email": "full@acme.com",
+        "email": "operations@acmecorp.io",
         "industry": "Technology",
         "country": "UAE",
         "session_interest": "Maybe later",
@@ -123,7 +123,7 @@ def test_playbook_backwards_compatibility():
     assert data["name"] == "Full Name", f"Expected name 'Full Name', got {data.get('name')}"
     assert data["company"] == "Acme Corp", f"Expected company 'Acme Corp', got {data.get('company')}"
     assert data["designation"] == "Operations Manager", f"Expected designation, got {data.get('designation')}"
-    assert data["email"] == "full@acme.com", f"Expected email, got {data.get('email')}"
+    assert data["email"] == "operations@acmecorp.io", f"Expected email, got {data.get('email')}"
     print("  ✅ PASS: Full payload accepted (backwards compatible)")
     return data["id"]
 
@@ -181,13 +181,13 @@ def test_regression_audit_requests():
     # Valid payload
     print("  9a. Valid payload")
     payload = {
-        "name": "Test User",
-        "company": "Test Company",
+        "name": "Alex Johnson",
+        "company": "TechFlow Solutions",
         "country": "UAE",
         "industry": "Technology",
         "process": "Lead qualification automation",
         "contact_method": "Email",
-        "email": "test@example.com"
+        "email": "alex@techflow.io"
     }
     response = requests.post(f"{BASE_URL}/audit-requests", json=payload)
     print(f"    Status: {response.status_code}")
@@ -201,7 +201,7 @@ def test_regression_audit_requests():
     print("  9b. Empty name")
     payload_empty_name = {
         "name": "",
-        "company": "Test Company",
+        "company": "TechFlow Solutions",
         "country": "UAE",
         "industry": "Technology",
         "process": "Some process",
@@ -215,8 +215,8 @@ def test_regression_audit_requests():
     # Empty process
     print("  9c. Empty process")
     payload_empty_process = {
-        "name": "Test User",
-        "company": "Test Company",
+        "name": "Alex Johnson",
+        "company": "TechFlow Solutions",
         "country": "UAE",
         "industry": "Technology",
         "process": "",
@@ -303,12 +303,12 @@ def test_regression_booking_double_booking():
     print("  11a. First booking")
     payload1 = {
         "name": "First Booker",
-        "company": "Company A",
+        "company": "Company Alpha",
         "country": "UAE",
         "industry": "Tech",
         "process": "Automation",
         "contact_method": "Email",
-        "email": "first@example.com",
+        "email": "first@companyalpha.io",
         "slot_iso_utc": available_slot["iso_utc"],
         "timezone": "Asia/Dubai"
     }
@@ -321,12 +321,12 @@ def test_regression_booking_double_booking():
     print("  11b. Second booking (should fail with 409)")
     payload2 = {
         "name": "Second Booker",
-        "company": "Company B",
+        "company": "Company Beta",
         "country": "UAE",
         "industry": "Tech",
         "process": "Automation",
         "contact_method": "Email",
-        "email": "second@example.com",
+        "email": "second@companybeta.io",
         "slot_iso_utc": available_slot["iso_utc"],
         "timezone": "Asia/Dubai"
     }

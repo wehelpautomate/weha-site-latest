@@ -1,0 +1,30 @@
+[
+  {
+    "content": "Part A fix: add PLAYBOOK_URL constant to resourceLinks.js",
+    "status": "completed"
+  },
+  {
+    "content": "Part A fix: PageHero supports formSubheading + formDownloadUrl + rightSlot; PlaybookLeadForm honors downloadUrl in full mode",
+    "status": "completed"
+  },
+  {
+    "content": "Part A fix: wire Resources + About hero forms to playbook magnet (distinct sources, correct copy)",
+    "status": "completed"
+  },
+  {
+    "content": "Part B: build shared LeadCalculator.jsx (gated popup -> POST -> reveal, recompute without re-gate)",
+    "status": "completed"
+  },
+  {
+    "content": "Part B: Services hero -> Automation ROI Calculator (source=calculator:services)",
+    "status": "completed"
+  },
+  {
+    "content": "Part B: Work hero -> Time Saved Calculator (source=calculator:work)",
+    "status": "completed"
+  },
+  {
+    "content": "Verify compile, screenshot all 4 pages, then test via testing agent",
+    "status": "in_progress"
+  }
+]

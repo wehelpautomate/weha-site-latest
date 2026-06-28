@@ -4,8 +4,63 @@ import CTABanner from "@/components/CTABanner";
 import Reveal from "@/components/Reveal";
 import ScrollSection from "@/components/ScrollSection";
 import IntegrationStrip from "@/components/IntegrationStrip";
+import LeadCalculator from "@/components/LeadCalculator";
 import Seo from "@/components/Seo";
 import { Sparkles, Check } from "lucide-react";
+
+/* ------------------------------------------------------------------ *
+ * Time Saved Calculator (Work hero).
+ * Simple multiplication only. Each task type maps to the share of that
+ * task automation typically handles.
+ * ------------------------------------------------------------------ */
+const timeInputs = [
+  {
+    label: "Which task eats the most time?",
+    key: "task",
+    options: [
+      { label: "Data entry between tools", value: 0.85 },
+      { label: "Chasing follow-ups", value: 0.7 },
+      { label: "Building reports", value: 0.8 },
+      { label: "Scheduling and reminders", value: 0.9 },
+    ],
+  },
+  {
+    label: "How often does it happen?",
+    key: "frequency",
+    options: [
+      { label: "Several times a day", value: 10 },
+      { label: "Daily", value: 5 },
+      { label: "A few times a week", value: 3 },
+      { label: "Weekly", value: 1 },
+    ],
+  },
+  {
+    label: "Roughly how long each time?",
+    key: "minutes",
+    options: [
+      { label: "5 minutes", value: 5 },
+      { label: "15 minutes", value: 15 },
+      { label: "30 minutes", value: 30 },
+      { label: "1 hour", value: 60 },
+    ],
+  },
+];
+
+const round1 = (n) => Math.round(n * 10) / 10;
+
+const computeTime = (v) => {
+  const weeklyMinutesNow = v.frequency * v.minutes;
+  const weeklyMinutesSaved = weeklyMinutesNow * v.task;
+  const weeklyHoursSaved = weeklyMinutesSaved / 60;
+  return {
+    headline: `You could reclaim about ${round1(weeklyHoursSaved)} hours a week on this one task.`,
+    lines: [
+      `That is roughly ${round1(weeklyHoursSaved * 4.3)} hours a month, freed up automatically.`,
+      "Most teams reinvest that time into work that actually grows the business, not the busywork.",
+    ],
+    note: "This estimate is for a single task. Most businesses have several like it. The percentages reflect how much of each task type automation typically handles. A free AI Audit maps your real tasks precisely.",
+  };
+};
 
 /* ------------------------------------------------------------------ *
  * Tech-stack logo treatment.
@@ -203,9 +258,17 @@ export default function Work() {
         title="Real systems, built for real"
         italicWord="teams."
         subtitle="A look at automation systems we have designed and shipped. Client names stay private. The work speaks for itself."
-        formHeading="Get the AI Transformation Playbook"
-        formTestid="work-lead-form"
-        formSource="work"
+        showForm={false}
+        rightSlot={
+          <LeadCalculator
+            title="Time Saved Calculator"
+            subtitle="Pick the task that eats your week and see roughly how many hours automation could hand back."
+            inputs={timeInputs}
+            compute={computeTime}
+            source="calculator:work"
+            testid="work-time-calculator"
+          />
+        }
       />
 
       <IntegrationStrip heading="The tools behind the builds" />

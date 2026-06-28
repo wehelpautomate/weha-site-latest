@@ -6,6 +6,7 @@ import IntegrationStrip from "@/components/IntegrationStrip";
 import Magnetic from "@/components/Magnetic";
 import Seo from "@/components/Seo";
 import { Linkedin } from "lucide-react";
+import { PLAYBOOK_URL } from "@/lib/resourceLinks";
 
 const ASSET = (p) => `${process.env.PUBLIC_URL || ""}${p}`;
 
@@ -62,9 +63,11 @@ export default function About() {
         title="We help businesses do more"
         italicWord="with less manual work."
         subtitle="WeHA exists because too many capable teams spend their days on work software should be doing for them. We build the systems that give that time back."
-        formHeading="Get the AI Transformation Playbook"
+        formHeading="Get the free AI Transformation Playbook"
+        formSubheading="A practical 10-chapter framework for figuring out where AI fits, what to automate first, and how to roll it out. No jargon, no obligation."
         formTestid="about-lead-form"
-        formSource="about"
+        formSource="playbook:about-hero"
+        formDownloadUrl={PLAYBOOK_URL}
       />
 
       <IntegrationStrip heading="The tools we build with" />

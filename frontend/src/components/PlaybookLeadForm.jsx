@@ -34,7 +34,9 @@ export default function PlaybookLeadForm({
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
-  const fileUrl = minimal ? downloadUrl : PLAYBOOK_DOWNLOAD_URL;
+  // A provided downloadUrl always wins (used by the hero playbook magnet so the
+  // real PDF is delivered instead of the placeholder).
+  const fileUrl = downloadUrl || PLAYBOOK_DOWNLOAD_URL;
 
   const update = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 

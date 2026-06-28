@@ -9,9 +9,13 @@ export default function PageHero({
   italicWord,
   showForm = true,
   formHeading,
+  formSubheading,
   formTestid = "hero-lead-form",
   formSource = "page-hero",
+  formDownloadUrl,
+  rightSlot,
 }) {
+  const hasRight = showForm || !!rightSlot;
   return (
     <section className="relative pt-32 md:pt-40 pb-16 md:pb-24 min-h-[72vh] flex items-center overflow-hidden">
       {/* 3D network is confined to the hero on inner pages */}
@@ -25,10 +29,10 @@ export default function PageHero({
       />
       <div
         className={`relative max-w-7xl mx-auto px-5 sm:px-8 w-full grid gap-12 items-center ${
-          showForm ? "lg:grid-cols-[1.05fr_0.95fr] lg:gap-16" : ""
+          hasRight ? "lg:grid-cols-[1.05fr_0.95fr] lg:gap-16" : ""
         }`}
       >
-        <div className={showForm ? "max-w-xl" : "max-w-4xl"}>
+        <div className={hasRight ? "max-w-xl" : "max-w-4xl"}>
           {kicker && (
             <Reveal>
               <span className="text-xs font-semibold tracking-[0.2em] uppercase text-weha-teal">{kicker}</span>
@@ -47,15 +51,19 @@ export default function PageHero({
           )}
         </div>
 
-        {showForm && (
+        {showForm ? (
           <Reveal delay={0.2}>
             <PlaybookLeadForm
               heading={formHeading || "Get the AI Transformation Playbook"}
+              subheading={formSubheading}
               testid={formTestid}
               source={formSource}
+              downloadUrl={formDownloadUrl}
             />
           </Reveal>
-        )}
+        ) : rightSlot ? (
+          <Reveal delay={0.2}>{rightSlot}</Reveal>
+        ) : null}
       </div>
     </section>
   );

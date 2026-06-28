@@ -4,6 +4,7 @@ import Reveal from "@/components/Reveal";
 import ScrollSection from "@/components/ScrollSection";
 import IntegrationStrip from "@/components/IntegrationStrip";
 import Magnetic from "@/components/Magnetic";
+import LeadCalculator from "@/components/LeadCalculator";
 import Seo from "@/components/Seo";
 import { ArrowRight } from "lucide-react";
 import { useBooking } from "@/context/BookingContext";
@@ -13,6 +14,59 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
+/* ------------------------------------------------------------------ *
+ * Automation ROI Calculator (Services hero).
+ * Simple multiplication only. Automation is assumed to remove about
+ * 70 percent of repetitive admin time (a fixed, conservative factor).
+ * ------------------------------------------------------------------ */
+const roiInputs = [
+  {
+    label: "How many people do repetitive admin work?",
+    key: "people",
+    options: [
+      { label: "1", value: 1 },
+      { label: "2 to 3", value: 2.5 },
+      { label: "4 to 6", value: 5 },
+      { label: "7 plus", value: 8 },
+    ],
+  },
+  {
+    label: "Roughly how many hours each, per week, on repetitive tasks?",
+    key: "hours",
+    options: [
+      { label: "2", value: 2 },
+      { label: "5", value: 5 },
+      { label: "10", value: 10 },
+      { label: "15 plus", value: 15 },
+    ],
+  },
+  {
+    label: "Rough cost level of that time?",
+    key: "rate",
+    options: [
+      { label: "Entry level", value: 15 },
+      { label: "Mid level", value: 25 },
+      { label: "Senior level", value: 40 },
+    ],
+  },
+];
+
+const computeRoi = (v) => {
+  const weeklyHoursSaved = v.people * v.hours * 0.7;
+  const weekly = Math.round(weeklyHoursSaved);
+  const monthly = Math.round(weeklyHoursSaved * 4.3);
+  const yearly = Math.round(weeklyHoursSaved * 52);
+  const valuePerYear = Math.round(weeklyHoursSaved * 52 * v.rate);
+  return {
+    headline: `About ${weekly} hours a week could be given back to your team.`,
+    lines: [
+      `That is roughly ${monthly} hours a month and ${yearly} hours a year.`,
+      `At your selected cost level, that is about ${valuePerYear.toLocaleString()} in value reclaimed per year, in your own currency.`,
+    ],
+    note: "This is a simple estimate to show the scale of the opportunity. Real savings depend on your exact workflows, which is what a free AI Audit maps precisely. The 70 percent figure reflects the share of repetitive admin that automation typically removes.",
+  };
+};
 
 const pillars = [
   {
@@ -99,9 +153,17 @@ export default function Services() {
         title="Three ways we help you"
         italicWord="work smarter."
         subtitle="From simple tool-to-tool automation, to autonomous AI agents, to hands-on transformation strategy. We meet you wherever you are on the journey."
-        formHeading="Get the AI Transformation Playbook"
-        formTestid="services-lead-form"
-        formSource="services"
+        showForm={false}
+        rightSlot={
+          <LeadCalculator
+            title="Automation ROI Calculator"
+            subtitle="See roughly how much time and value your team could reclaim by automating repetitive admin work."
+            inputs={roiInputs}
+            compute={computeRoi}
+            source="calculator:services"
+            testid="services-roi-calculator"
+          />
+        }
       />
 
       <IntegrationStrip heading="Plays nice with your whole toolbox" />

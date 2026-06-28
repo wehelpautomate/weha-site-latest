@@ -6,6 +6,7 @@ import Reveal from "@/components/Reveal";
 import ScrollSection from "@/components/ScrollSection";
 import IntegrationStrip from "@/components/IntegrationStrip";
 import Seo from "@/components/Seo";
+import { PLAYBOOK_URL } from "@/lib/resourceLinks";
 
 const resources = [
   {
@@ -44,9 +45,11 @@ export default function Resources() {
         title="Free tools to start"
         italicWord="automating today."
         subtitle="A growing library of practical, no-cost resources. Workbooks, automation blueprints, and eBooks, built from real client work."
-        formHeading="Get the AI Transformation Playbook"
+        formHeading="Get the free AI Transformation Playbook"
+        formSubheading="A practical 10-chapter framework for figuring out where AI fits, what to automate first, and how to roll it out. No jargon, no obligation."
         formTestid="resources-lead-form"
-        formSource="resources"
+        formSource="playbook:resources-hero"
+        formDownloadUrl={PLAYBOOK_URL}
       />
 
       <IntegrationStrip heading="Built for the tools you already run" />

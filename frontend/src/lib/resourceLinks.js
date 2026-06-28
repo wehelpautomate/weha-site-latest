@@ -1,4 +1,10 @@
 // WeHA resource download links (Google Drive). Live and ready.
+
+// The AI Transformation Playbook lead magnet, delivered by the Resources and
+// About hero forms on successful submit.
+export const PLAYBOOK_URL =
+  "https://drive.google.com/uc?export=download&id=1MHMtVU2sRkr0uWRHm8YUBxIRFf3cfoh6";
+
 export const DRIVE = {
   // eBooks (PDF)
   ebookOperatingSystem: "https://drive.google.com/uc?export=download&id=1vBriKqEM_tfDbe3JC7FczHsU1WK4PcQ7",
