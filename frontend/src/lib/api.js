@@ -32,6 +32,11 @@ export async function submitPlaybookLead(payload) {
   return data;
 }
 
+export async function submitCalculatorLead(payload) {
+  const { data } = await axios.post(`${API}/calculator-leads`, payload);
+  return data;
+}
+
 // WeHA AI — chat with the automation assistant.
 // NOTE: WeHA AI was moved out of the live site. The helpers
 // (sendWehaAiMessage / fetchWehaAiModels) now live in

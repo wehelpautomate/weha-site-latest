@@ -4,7 +4,7 @@ import Reveal from "@/components/Reveal";
 import ScrollSection from "@/components/ScrollSection";
 import IntegrationStrip from "@/components/IntegrationStrip";
 import Magnetic from "@/components/Magnetic";
-import LeadCalculator from "@/components/LeadCalculator";
+import ValueCalculator from "@/components/ValueCalculator";
 import Seo from "@/components/Seo";
 import { ArrowRight } from "lucide-react";
 import { useBooking } from "@/context/BookingContext";
@@ -18,54 +18,80 @@ import {
 
 /* ------------------------------------------------------------------ *
  * Automation ROI Calculator (Services hero).
- * Simple multiplication only. Automation is assumed to remove about
- * 70 percent of repetitive admin time (a fixed, conservative factor).
+ * Transparent multi-driver model: labor time plus error and rework
+ * cost. Conservative realism factors are baked in: a 0.85 exception
+ * factor (never assume full automation) and only ~60 percent of error
+ * cost removed.
  * ------------------------------------------------------------------ */
 const roiInputs = [
   {
-    label: "How many people do repetitive admin work?",
     key: "people",
+    label: "How many people work on this process?",
     options: [
       { label: "1", value: 1 },
       { label: "2 to 3", value: 2.5 },
       { label: "4 to 6", value: 5 },
-      { label: "7 plus", value: 8 },
+      { label: "7 or more", value: 8 },
     ],
   },
   {
-    label: "Roughly how many hours each, per week, on repetitive tasks?",
-    key: "hours",
+    key: "hoursEach",
+    label: "Hours each spends on it per week?",
     options: [
       { label: "2", value: 2 },
       { label: "5", value: 5 },
       { label: "10", value: 10 },
-      { label: "15 plus", value: 15 },
+      { label: "20 or more", value: 20 },
     ],
   },
   {
-    label: "Rough cost level of that time?",
     key: "rate",
+    label: "Fully loaded hourly cost of that time?",
     options: [
-      { label: "Entry level", value: 15 },
-      { label: "Mid level", value: 25 },
-      { label: "Senior level", value: 40 },
+      { label: "Junior", value: 20 },
+      { label: "Mid", value: 35 },
+      { label: "Senior", value: 55 },
+      { label: "Specialist", value: 80 },
+    ],
+  },
+  {
+    key: "errorCost",
+    label: "Rough monthly cost of mistakes and rework in this process?",
+    options: [
+      { label: "Minimal", value: 0 },
+      { label: "Low", value: 200 },
+      { label: "Moderate", value: 800 },
+      { label: "High", value: 2500 },
+    ],
+  },
+  {
+    key: "processType",
+    label: "What best describes the process?",
+    options: [
+      { label: "Data entry and admin", value: 0.8 },
+      { label: "Chasing and follow-ups", value: 0.7 },
+      { label: "Reporting and compiling", value: 0.8 },
+      { label: "Reviewing and deciding", value: 0.5 },
     ],
   },
 ];
 
 const computeRoi = (v) => {
-  const weeklyHoursSaved = v.people * v.hours * 0.7;
-  const weekly = Math.round(weeklyHoursSaved);
-  const monthly = Math.round(weeklyHoursSaved * 4.3);
-  const yearly = Math.round(weeklyHoursSaved * 52);
-  const valuePerYear = Math.round(weeklyHoursSaved * 52 * v.rate);
+  const weeklyHours = v.people * v.hoursEach;
+  const automatableHours = weeklyHours * v.processType * 0.85; // 0.85 realism factor
+  const annualHoursSaved = Math.round(automatableHours * 52);
+  const laborValue = annualHoursSaved * v.rate;
+  const errorValue = v.errorCost * 12 * 0.6; // automation removes ~60% of error cost
+  const totalAnnualBenefit = Math.round(laborValue + errorValue);
   return {
-    headline: `About ${weekly} hours a week could be given back to your team.`,
-    lines: [
-      `That is roughly ${monthly} hours a month and ${yearly} hours a year.`,
-      `At your selected cost level, that is about ${valuePerYear.toLocaleString()} in value reclaimed per year, in your own currency.`,
+    headline: `About ${annualHoursSaved.toLocaleString()} hours and ${totalAnnualBenefit.toLocaleString()} in value reclaimed per year.`,
+    breakdown: [
+      { label: "Hours reclaimed per year", value: annualHoursSaved.toLocaleString() },
+      { label: "Labor value", value: Math.round(laborValue).toLocaleString() },
+      { label: "Error and rework value", value: Math.round(errorValue).toLocaleString() },
+      { label: "Total annual benefit", value: totalAnnualBenefit.toLocaleString() },
     ],
-    note: "This is a simple estimate to show the scale of the opportunity. Real savings depend on your exact workflows, which is what a free AI Audit maps precisely. The 70 percent figure reflects the share of repetitive admin that automation typically removes.",
+    note: "This combines time saved and reduced errors, the two biggest drivers most businesses miss. Figures are in your own currency. We applied a realism factor so this reflects what is achievable, not a perfect-world maximum.",
   };
 };
 
@@ -195,9 +221,10 @@ export default function Services() {
         subtitle="From simple tool-to-tool automation, to autonomous AI agents, to hands-on transformation strategy. We meet you wherever you are on the journey."
         showForm={false}
         rightSlot={
-          <LeadCalculator
+          <ValueCalculator
             title="Automation ROI Calculator"
-            subtitle="See roughly how much time and value your team could reclaim by automating repetitive admin work."
+            intro="See the real annual value of automating one of your manual processes. Most businesses undercount this by looking only at time saved."
+            accentNote="Hourly cost and error cost are in your own currency, no symbol needed."
             inputs={roiInputs}
             compute={computeRoi}
             source="calculator:services"

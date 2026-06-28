@@ -247,6 +247,59 @@ async def get_playbook_requests():
     return items
 
 
+# --- Calculator lead capture (Services / Work hero ValueCalculators) ----------
+class CalculatorLeadCreate(BaseModel):
+    name: str
+    email: EmailStr
+    company: Optional[str] = None
+    source: Optional[str] = None
+    inputs_json: Optional[str] = None     # selected calculator inputs, stringified JSON
+    result_summary: Optional[str] = None  # computed headline, for context
+
+
+class CalculatorLead(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: str
+    company: Optional[str] = None
+    source: Optional[str] = None
+    inputs_json: Optional[str] = None
+    result_summary: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@api_router.post("/calculator-leads", response_model=CalculatorLead)
+async def create_calculator_lead(input: CalculatorLeadCreate):
+    # Anti-spam / junk-data validation (mirrors frontend spamGuard).
+    validate_name(input.name)
+    validate_email(input.email, required=True)
+    validate_company(input.company, required=False)
+
+    data = input.model_dump()
+    # Cap stored field lengths.
+    if data.get('inputs_json'):
+        data['inputs_json'] = data['inputs_json'][:4000]
+    if data.get('result_summary'):
+        data['result_summary'] = data['result_summary'][:500]
+
+    obj = CalculatorLead(**data)
+    doc = obj.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    await db.calculator_leads.insert_one(doc)
+    return obj
+
+
+@api_router.get("/calculator-leads", response_model=List[CalculatorLead])
+async def get_calculator_leads():
+    items = await db.calculator_leads.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    for it in items:
+        if isinstance(it.get('created_at'), str):
+            it['created_at'] = datetime.fromisoformat(it['created_at'])
+    return items
+
+
 # Include the router in the main app
 
 app.include_router(api_router)

@@ -1,22 +1,26 @@
 [
   {
-    "content": "Part 1: react-snap prerender (postbuild wrapper, config, hydrate pattern) - verified 9 routes prerendered",
+    "content": "Backend: /api/calculator-leads POST+GET (FastAPI) + CF function + schema.sql table",
     "status": "completed"
   },
   {
-    "content": "Part 2: rewrite index.html/llms.txt/sitemap.xml, confirm robots.txt",
+    "content": "Frontend: ValueCalculator.jsx (gate Dialog -> POST -> separate floating result Dialog; session-captured; recalc no re-gate)",
     "status": "completed"
   },
   {
-    "content": "Part 3: per-page meta + JSON-LD on all 9 routes",
+    "content": "Services: Automation ROI Calculator (5 inputs, multi-driver conservative model)",
     "status": "completed"
   },
   {
-    "content": "Part 4: hygiene (noindex audit, manifest, _redirects, alt text, lang)",
+    "content": "Work: Time & Capacity Calculator (5 inputs, FTE model)",
     "status": "completed"
   },
   {
-    "content": "Final verification: em-dashes, og:image, robots sitemap URL, build artifacts",
+    "content": "Remove old LeadCalculator, api.js helper, rebuild+prerender, verify",
+    "status": "completed"
+  },
+  {
+    "content": "Formal end-to-end testing via testing agent",
     "status": "in_progress"
   }
 ]

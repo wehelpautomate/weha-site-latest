@@ -49,6 +49,19 @@ CREATE TABLE IF NOT EXISTS playbook_leads (
 );
 CREATE INDEX IF NOT EXISTS idx_playbook_created_at ON playbook_leads (created_at DESC);
 
+CREATE TABLE IF NOT EXISTS calculator_leads (
+  id TEXT PRIMARY KEY,
+  form_name TEXT NOT NULL DEFAULT 'calculator_lead',
+  source TEXT,                 -- 'calculator:services' | 'calculator:work'
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  company TEXT,
+  inputs_json TEXT,            -- the selected calculator inputs, as JSON
+  result_summary TEXT,         -- the headline result, for context
+  created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_calc_created_at ON calculator_leads (created_at DESC);
+
 CREATE TABLE IF NOT EXISTS contact_messages (
   id             TEXT PRIMARY KEY,
   form_name      TEXT NOT NULL DEFAULT 'contact_message',

@@ -4,62 +4,91 @@ import CTABanner from "@/components/CTABanner";
 import Reveal from "@/components/Reveal";
 import ScrollSection from "@/components/ScrollSection";
 import IntegrationStrip from "@/components/IntegrationStrip";
-import LeadCalculator from "@/components/LeadCalculator";
+import ValueCalculator from "@/components/ValueCalculator";
 import Seo from "@/components/Seo";
 import { Sparkles, Check } from "lucide-react";
 import { ORG, SITE, breadcrumb, graph } from "@/lib/seoSchemas";
 
 /* ------------------------------------------------------------------ *
- * Time Saved Calculator (Work hero).
- * Simple multiplication only. Each task type maps to the share of that
- * task automation typically handles.
+ * Time & Capacity Calculator (Work hero).
+ * Transparent model focused on time and people. A 0.85 realism factor
+ * is applied (never assume full automation), and freed time is framed
+ * as full-time-person (FTE) equivalent at 1800 productive hours a year.
  * ------------------------------------------------------------------ */
 const timeInputs = [
   {
-    label: "Which task eats the most time?",
-    key: "task",
+    key: "taskType",
+    label: "Which task do you want to automate?",
     options: [
       { label: "Data entry between tools", value: 0.85 },
-      { label: "Chasing follow-ups", value: 0.7 },
+      { label: "Chasing leads or payments", value: 0.7 },
       { label: "Building reports", value: 0.8 },
       { label: "Scheduling and reminders", value: 0.9 },
+      { label: "Screening or triaging", value: 0.6 },
     ],
   },
   {
-    label: "How often does it happen?",
     key: "frequency",
+    label: "How often does it happen?",
     options: [
-      { label: "Several times a day", value: 10 },
+      { label: "Many times a day", value: 40 },
+      { label: "A few times a day", value: 15 },
       { label: "Daily", value: 5 },
       { label: "A few times a week", value: 3 },
       { label: "Weekly", value: 1 },
     ],
   },
   {
+    key: "minutesEach",
     label: "Roughly how long each time?",
-    key: "minutes",
     options: [
-      { label: "5 minutes", value: 5 },
-      { label: "15 minutes", value: 15 },
-      { label: "30 minutes", value: 30 },
+      { label: "5 min", value: 5 },
+      { label: "15 min", value: 15 },
+      { label: "30 min", value: 30 },
       { label: "1 hour", value: 60 },
+      { label: "2 hours plus", value: 120 },
+    ],
+  },
+  {
+    key: "people",
+    label: "How many people do this task?",
+    options: [
+      { label: "1", value: 1 },
+      { label: "2 to 3", value: 2.5 },
+      { label: "4 to 6", value: 5 },
+      { label: "7 or more", value: 8 },
+    ],
+  },
+  {
+    key: "reinvest",
+    label: "What would freed-up time go toward?",
+    options: [
+      { label: "Growth and sales", value: "growth and sales" },
+      { label: "Better customer service", value: "better customer service" },
+      { label: "Higher-value work", value: "higher-value work" },
+      { label: "Reducing overtime", value: "reducing overtime" },
     ],
   },
 ];
 
-const round1 = (n) => Math.round(n * 10) / 10;
+const round0 = (n) => Math.round(n);
 
 const computeTime = (v) => {
-  const weeklyMinutesNow = v.frequency * v.minutes;
-  const weeklyMinutesSaved = weeklyMinutesNow * v.task;
-  const weeklyHoursSaved = weeklyMinutesSaved / 60;
+  const weeklyMinutes = v.frequency * v.minutesEach * v.people;
+  const savedMinutes = weeklyMinutes * v.taskType * 0.85; // realism factor
+  const weeklyHours = savedMinutes / 60;
+  const monthlyHours = Math.round(weeklyHours * 4.33);
+  const annualHours = Math.round(weeklyHours * 52);
+  const fteEquivalent = (annualHours / 1800).toFixed(1); // 1800 productive hours per FTE per year
   return {
-    headline: `You could reclaim about ${round1(weeklyHoursSaved)} hours a week on this one task.`,
-    lines: [
-      `That is roughly ${round1(weeklyHoursSaved * 4.3)} hours a month, freed up automatically.`,
-      "Most teams reinvest that time into work that actually grows the business, not the busywork.",
+    headline: `About ${round0(weeklyHours).toLocaleString()} hours a week, ${annualHours.toLocaleString()} hours a year, freed up.`,
+    breakdown: [
+      { label: "Hours reclaimed per week", value: round0(weeklyHours).toLocaleString() },
+      { label: "Per month", value: monthlyHours.toLocaleString() },
+      { label: "Per year", value: annualHours.toLocaleString() },
+      { label: "Equivalent to", value: `${fteEquivalent} full-time person` },
     ],
-    note: "This estimate is for a single task. Most businesses have several like it. The percentages reflect how much of each task type automation typically handles. A free AI Audit maps your real tasks precisely.",
+    note: `That is roughly ${fteEquivalent} of a full-time person's capacity, redirected toward ${v.reinvest}. Most teams find the reclaimed time compounds as they automate more tasks.`,
   };
 };
 
@@ -282,9 +311,9 @@ export default function Work() {
         subtitle="A look at automation systems we have designed and shipped. Client names stay private. The work speaks for itself."
         showForm={false}
         rightSlot={
-          <LeadCalculator
-            title="Time Saved Calculator"
-            subtitle="Pick the task that eats your week and see roughly how many hours automation could hand back."
+          <ValueCalculator
+            title="Time & Capacity Calculator"
+            intro="See how much team capacity one automation could unlock. This calculator focuses on time and people, not just money."
             inputs={timeInputs}
             compute={computeTime}
             source="calculator:work"
