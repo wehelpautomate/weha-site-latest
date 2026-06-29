@@ -355,7 +355,22 @@ agent_communication:
       message: "BUG FIX — Mobile menu had no opaque background on mobile devices: header bar (top 64px) stayed transparent when scrollY=0 so the 3D network chips bled through the top edge of the open menu. Fixed in src/components/Header.jsx by (1) forcing header to solid bg-weha-bg when mobile menu is open and (2) adding explicit z-40 to the mobile menu panel for cross-browser stacking stability. Please verify on mobile viewport (e.g. 390x844): opening the mobile menu must show a fully opaque background — light cream (#f7f6f2) in light mode, dark (#171614) in dark mode — with NO 3D network chips/text visible through the menu area (including the top header bar). Also confirm tapping a nav link closes the menu and navigates. Toggle theme button and 'Book a Free Audit' CTA inside the menu should still work."
 
 frontend:
-  - task: "Section background readability (PAIN + METRICS sections)"
+  - task: "Mobile header CTA one-line + smaller mobile menu nav text"
+    implemented: true
+    working: true
+    file: "frontend/src/index.css, frontend/src/components/Header.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "user"
+          comment: "Two mobile issues (screenshots): (1) header 'Book a Free Audit' CTA wrapped onto two lines; (2) open mobile menu nav text (Home/About/Services/Work/Resources/Contact) was too large (text-5xl/48px)."
+        - working: true
+          agent: "testing"
+          comment: "✅ BOTH FIXES VERIFIED. FIX 1 (720x900): header-cta white-space:nowrap, button height 43px, 'Book a Free Audit' on ONE line. FIX 2 (720x900 and 390x844): mobile nav links computed font-size 30px (text-3xl), not 48px; menu still opens/closes and navigates correctly. Fixes: added white-space:nowrap to .btn-teal in index.css; changed mobile nav links from text-5xl to text-3xl in Header.jsx."
+
+frontend_legacy:
     implemented: true
     working: true
     file: "frontend/src/pages/Home.jsx, frontend/src/index.css"
