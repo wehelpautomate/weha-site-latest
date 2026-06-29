@@ -238,7 +238,7 @@ export default function Header() {
                     onClick={() => setOpen(false)}
                     data-testid="mobile-nav-resources"
                     className={({ isActive }) =>
-                      `weha-display text-5xl py-3 block ${isActive ? "text-weha-teal" : "text-weha-text"}`
+                      `weha-display text-3xl py-3 block ${isActive ? "text-weha-teal" : "text-weha-text"}`
                     }
                   >
                     Resources
@@ -272,7 +272,7 @@ export default function Header() {
                 onClick={() => setOpen(false)}
                 data-testid={`mobile-nav-${l.label.toLowerCase().replace(/\s+/g, "-")}`}
                 className={({ isActive }) =>
-                  `weha-display text-5xl py-3 border-b border-weha-border ${
+                  `weha-display text-3xl py-3 border-b border-weha-border ${
                     isActive ? "text-weha-teal" : "text-weha-text"
                   }`
                 }
