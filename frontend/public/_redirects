@@ -1,5 +1,13 @@
-# Cloudflare Pages SPA fallback for client-side routing.
-# Prerendered routes (react-snap) ship their own /<route>/index.html and are
-# served as static files first; this 200 rewrite only catches paths that have
-# no matching static file, so deep links still resolve to the app shell.
-/*    /index.html   200
+# Cloudflare Pages routing for the WeHA single-page app.
+#
+# - /api/* is served by Pages Functions (see _routes.json) and is never
+#   rewritten here, so API calls always reach the functions.
+# - Every client route is prerendered to its own static HTML by react-snap, so
+#   deep links and refreshes (e.g. /services) resolve directly to real files.
+# - Any unmatched path is served the app shell via build/404.html (generated in
+#   the postbuild step), which boots React Router client-side.
+#
+# We intentionally do NOT add a "/*  /index.html  200" catch-all: Cloudflare
+# rejects it as an "infinite loop" (the /index.html destination is itself
+# matched by /*), so the rule is ignored and breaks deep links. The 404.html
+# fallback above achieves the same SPA behaviour without the loop.
