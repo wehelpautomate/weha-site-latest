@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import sys
 
 # Backend URL from frontend/.env
-BASE_URL = "https://change-ready-2.preview.emergentagent.com/api"
+BASE_URL = "https://git-live.preview.emergentagent.com/api"
 
 def test_playbook_minimal_payload():
     """Test 1: POST with ONLY name+email => 200, company should be null"""
